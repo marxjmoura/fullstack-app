@@ -32,5 +32,14 @@
       margin-bottom: 2rem;
       margin-right: 0;
     }
+
+    &.author-sm {
+      display: flex;
+
+      img {
+        margin-bottom: 0;
+        margin-right: 1rem;
+      }
+    }
   }
 }
