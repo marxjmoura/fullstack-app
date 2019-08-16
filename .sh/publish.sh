@@ -1,6 +1,8 @@
 #!/bin/bash
 
 rm -rf dist
+git checkout master
+git pull origin master
 npm install
 npm run build
 git checkout --orphan gh-pages
@@ -11,3 +13,5 @@ git add .
 git commit -m "Publish"
 git push -f origin gh-pages
 git branch -D gh-pages
+git checkout master
+npm install
