@@ -14,6 +14,6 @@ echo "fullstack.app" > CNAME
 git add .
 git commit -m "Publish"
 git push -f origin gh-pages
-git branch -D gh-pages
 git checkout master
+git branch -D gh-pages
 npm install
