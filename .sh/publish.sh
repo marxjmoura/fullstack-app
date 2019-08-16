@@ -3,6 +3,7 @@
 set -e
 
 rm -rf dist
+[[ `git branch --list gh-pages` ]] && git branch -D gh-pages
 git checkout master
 git pull origin master
 npm install
@@ -15,5 +16,4 @@ git add .
 git commit -m "Publish"
 git push -f origin gh-pages
 git checkout master
-git branch -D gh-pages
 npm install
