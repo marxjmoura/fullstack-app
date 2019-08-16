@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm -rf dist
 npm install
 npm run build
 git checkout --orphan gh-pages
