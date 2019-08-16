@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 rm -rf dist
 git checkout master
 git pull origin master
