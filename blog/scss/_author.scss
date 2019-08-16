@@ -1,10 +1,10 @@
-.footer {
+.author {
   display: flex;
   align-items: center;
   padding: 4rem 0 2rem 0;
   text-align: center;
 
-  .author {
+  img {
     border-radius: 50%;
     box-shadow: 0 .25rem .5rem 0 rgba(0, 0, 0, .15), 0 .125rem .25rem 0 rgba(0, 0, 0, .1);
     margin-right: 2rem;
@@ -19,7 +19,7 @@
   @media (max-width: map-get($grid-breakpoints, "sm")) {
     display: block;
 
-    .author {
+    img {
       margin-bottom: 2rem;
       margin-right: 0;
     }
