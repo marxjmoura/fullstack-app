@@ -8,4 +8,4 @@ cp -r dist/* .
 echo "fullstack.app" > CNAME
 git add .
 git commit -m "Publish"
-git push -f gh-pages
+git push -f origin gh-pages
