@@ -1,10 +1,11 @@
-<!-- @@master = /includes/_layout.html-->
+{{#> blog/layout translation="/br" }}
 
-<!-- @@block = head -->
+{{#*inline "head-block"}}
 <meta name="description" content="I'm Marx J. Moura and I write all I know about building web applications. This blog is the place where I share my knowledge and experience." />
 <title>Full-Stack Applications</title>
-<!-- @@close -->
+{{/inline}}
 
-<!-- @@block = body -->
-@@include('includes/_techs.html')
-<!-- @@close -->
+{{#*inline "body-block"}}
+{{/inline}}
+
+{{/blog/layout}}

@@ -8,3 +8,31 @@ h6 {
     text-decoration: none;
   }
 }
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  a {
+    display: none;
+    font-size: 1.75rem;
+
+    &::before {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f0c1";
+    }
+  }
+
+  a,
+  a:hover {
+    color: $link-color;
+  }
+
+  &:hover {
+    a {
+      display: inline-block;
+    }
+  }
+}
