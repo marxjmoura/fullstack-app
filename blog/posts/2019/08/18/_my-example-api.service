@@ -1,0 +1,18 @@
+[Unit]
+Description=My Example API
+
+[Service]
+WorkingDirectory=/var/www/example-api/current
+ExecStart=/usr/bin/dotnet /var/www/example-api/current/Api.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=my-example-api
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://localhost:5000
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+EnvironmentFile=/etc/my.config
+
+[Install]
+WantedBy=multi-user.target
