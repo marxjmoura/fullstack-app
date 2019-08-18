@@ -66,9 +66,22 @@
       </p>
       {{/if}}
     </div>
+    <div id="disqus_thread"></div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/js/all.min.js" integrity="sha256-xzrHBImM2jn9oDLORlHS1/0ekn1VyypEkV1ALvUx8lU=" crossorigin="anonymous"></script>
   <script src="/blog.min.js"></script>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://fullstack.app/posts/{{disqus}}';
+      this.page.identifier = '{{disqus}}';
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://fullstack-app.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', + new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
   {{#> scripts-block}}{{/scripts-block}}
 </body>
 </html>
