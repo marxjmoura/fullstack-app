@@ -66,10 +66,13 @@
       </p>
       {{/if}}
     </div>
+    {{#if disqus}}
     <div id="disqus_thread"></div>
+    {{/if}}
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/js/all.min.js" integrity="sha256-xzrHBImM2jn9oDLORlHS1/0ekn1VyypEkV1ALvUx8lU=" crossorigin="anonymous"></script>
   <script src="/blog.min.js"></script>
+  {{#if disqus}}
   <script>
     var disqus_config = function () {
       this.page.url = 'https://fullstack.app/posts/{{disqus}}';
@@ -82,6 +85,7 @@
       (d.head || d.body).appendChild(s);
     })();
   </script>
+  {{/if}}
   {{#> scripts-block}}{{/scripts-block}}
 </body>
 </html>
