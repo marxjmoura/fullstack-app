@@ -24,13 +24,18 @@ handlebars.registerHelper('recent_posts', function (prefix) {
 
     const rootfiledir = path.join(ROOTDIR, 'blog')
     const url = file.replace(rootfiledir, '').replace('hbs', 'html')
-    const link = $('<a/>').attr('href', url).html($('h1').text())
+    const title = $('h1').text()
 
-    const date = $('small').wrap('<small/>').parent().html()
-    const title = $('<h1/>').html(link).wrap('<h1/>').parent().html()
-    const summary = $('p').wrap('<p/>').parent().html()
+    const $postdate = $('small')
+    const $link = $('<a/>').attr('href', url).html(title)
+    const $title = $('h1').html($link)
+    const $summary = $('p').first()
 
-    posts += `${date} ${title} ${summary}`
+    posts += $('<div/>')
+      .append($postdate)
+      .append($title)
+      .append($summary)
+      .html()
   }
 
   return new handlebars.SafeString(posts)
