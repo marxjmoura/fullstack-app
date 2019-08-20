@@ -43,11 +43,10 @@ handlebars.registerHelper('recent_posts', function (prefix) {
 
 handlebars.registerHelper('include', function (file) {
   try {
-    const content = fs.readFileSync(file, 'utf8')
-    return new handlebars.SafeString(content)
+    return fs.readFileSync(file, 'utf8')
   } catch (error) {
     console.error(PLUGIN_NAME, error.message)
-    return new handlebars.SafeString('')
+    return ''
   }
 })
 

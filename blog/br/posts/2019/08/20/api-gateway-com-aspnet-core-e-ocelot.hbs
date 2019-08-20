@@ -1,0 +1,201 @@
+{{#> blog/page
+  lang="pt"
+  title="API gateway com ASP.NET Core e Ocelot"
+  description="Pensar no padrão de arquitetura de microsserviços nos leva a pensar em API gateway. Então, vamos discutir um pouco e implementar uma API gateway usando o framework Ocelot."
+  path="br/posts/2019/08/20/api-gateway-com-aspnet-core-e-ocelot.html"
+  image="posts/2019/08/20/cover.png"
+  disqus="2019/08/20/api-gateway-with-aspnet-core-and-ocelot"
+  original="/posts/2019/08/20/api-gateway-with-aspnet-core-and-ocelot.html"
+}}
+
+{{#*inline "body-block"}}
+<small>
+  20 de agosto de 2019
+</small>
+
+<h1>
+  API gateway com ASP.NET Core e Ocelot
+</h1>
+
+<figure>
+  <img src="/posts/2019/08/20/cover.svg" alt="API gateway com Ocelot">
+</figure>
+
+<p>
+  Pensar no padrão de arquitetura de microsserviços nos leva a pensar em API gateway.
+  Então, vamos discutir um pouco e implementar uma API gateway usando o
+  <a href="https://threemammals.com/ocelot/">framework Ocelot </a>.
+</p>
+
+<p>
+  Eu li dois ótimos artigos, a
+  <a href="https://microservices.io/patterns/apigateway.html">microservices.io</a> e a
+  <a href="https://docs.microsoft.com/en-us/azure/architecture/microservices/design/gateway">documentação da Microsoft</a>,
+  que me ajudaram muito a entender o uso de uma API gateway.
+  Eu também implementei uma API gateway no meu projeto de código aberto
+  <a href="https://github.com/storefront-community/api-gateway">Storefront Community</a>.
+</p>
+
+<p>
+  De maneira breve, uma API gateway é um ponto de entrada para todos os nossos serviços.
+  Isso nos permite ter um único domínio para todas as nossas APIs, ao invés de ter um subdomínio
+  para cada uma delas. Com subdomínios nós temos a preocupação de SSL para cada API, frontend se
+  conectando com múltiplas APIs gerando mais esforço para lidar com autorização, entre outros.
+</p>
+
+<p>
+  O <a href="https://threemammals.com/ocelot/">Ocelot</a> é framwork de
+  <a href="https://github.com/ThreeMammals/Ocelot">código aberto</a> para construir API gateway com .NET.
+  Assim que finalizarmos a implementação da nossa API gateway alcançaremos isso:
+  <ul>
+    <li>exemplo.com/api1/dados</li>
+    <li>exemplo.com/api2/dados</li>
+    <li>exemplo.com/api3/dados</li>
+  </ul>
+</p>
+
+<p>
+  Ao invés disso (sem API gateway):
+  <ul>
+    <li>api1.exemplo.com/dados</li>
+    <li>api2.exemplo.com/dados</li>
+    <li>api3.exemplo.com/dados</li>
+  </ul>
+</p>
+
+<p>
+  Para autorização nós usaremos o
+  <a href="https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-2.2&tabs=netcore-cli">
+    ASP.NET Core Identity</a>,
+  mas discutiremos isso em um outro post.
+</p>
+
+<p>
+  Então, vamos começar. Eu estou usando o
+  <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new?tabs=netcore22">.NET Core CLI</a>
+  e admitindo que você já tem o <a href="https://dotnet.microsoft.com">.NET Core SDK</a> instalado.
+</p>
+
+<p>
+  Primeiro crie um diretório para o projeto usando o comando <code>mkdir</code>
+  e navege para ele usando o comando <code>cd</code>:
+</p>
+
+<p>
+  <pre><code>mkdir ApiGateway</code></pre>
+</p>
+
+<p>
+  <pre><code>cd ApiGateway</code></pre>
+</p>
+
+<p>
+  Dentro do diretório <code>ApiGateway</code> vamos criar um projeto web vazio:
+</p>
+
+<p>
+  <pre><code>dotnet new web</code></pre>
+</p>
+
+A seguida adicione o pacote do Ocelot ao projeto:
+
+<p>
+  <pre><code>dotnet add package Ocelot</code></pre>
+</p>
+
+<p>
+  O arquivo <code>ApiGateway.csproj</code> de estar parecido com isso:
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/08/20/ApiGateway.csproj' }}</code></pre>
+</p>
+
+<p>
+  Ainda no diretório raíz do projeto vamos criar o arquivo de configuração
+  <code>ocelot.json</code> com o seguinte conteúdo:
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/08/20/ocelot.json' }}</code></pre>
+</p>
+
+<p>
+  Eu explicarei o que significa cada propriedade mas você também pode usar a
+  <a href="https://ocelot.readthedocs.io/en/latest/introduction/gettingstarted.html">documentação do Ocelot</a>
+  como referência:
+
+  <ul>
+    <li>
+      <code>GlobalConfiguration.BaseUrl</code>: A URL onde nossa API gateway está executando.
+    </li>
+    <li>
+      <code>ReRoutes</code>: Configuração de todas as rotas de uma requisição para outras APIs.
+    </li>
+    <li>
+      <code>ReRoutes.UpstreamPathTemplate</code>: O padrão de rota que corresponde com uma API.
+    </li>
+    <li>
+      <code>ReRoutes.DownstreamPathTemplate</code>:
+      A variável que criamos para passar para a próxima rota.
+      Pode ser qualquer nome e mais do que uma, ex.: <code>/foo/{var1}/data/{var2}</code>.
+    </li>
+    <li>
+      <code>ReRoutes.DownstreamScheme</code>: O protocolo que estamos utilizando. Neste caso <code>http</code>.
+    </li>
+    <li>
+      <code>ReRoutes.DownstreamHostAndPorts</code>: O host e porta onde a API de destino está executando.
+    </li>
+  </ul>
+</p>
+
+<p>
+  O resultado é: toda requisição usando os métodos <code>GET</code>, <code>POST</code>, <code>PUT</code>,
+  <code>DELETE</code> e <code>OPTIONS</code> de <code>http://localhost:5000/mocky/{paht}</code> serão roteadas
+  para <code>http://www.mocky.io/v2/{path}</code> (não confundir com redirecionamento). Onde <code>path</code>
+  pode assumir qualquer valor e será repassado para API de destino.
+</p>
+
+<p>
+  Agora precisamos fazer com que nossa API gateway leia o arquivo de configuração <code>ocelot.json</code>.
+  Iremos fazer isso através da classe <code>Program</code> e para isso, vamos substituir o conteúdo do arquivo
+  <code>Program.cs</code> com o seguinte:
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/08/20/Program.cs' }}</code></pre>
+</p>
+
+<p>
+  Para que nossa gateway API utilize o Ocelot precisamos configurá-la na classe <code>Startup</code>.
+  Substitua o conteúdo do arquivo <code>Startup.cs</code> pelo seguinte:
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/08/20/Startup.cs' }}</code></pre>
+</p>
+
+<p>
+  Agora, vamos executar nossa API gateway (por padrão em <code>http://localhost:5000</code>):
+</p>
+
+<p>
+  <pre><code>dotnet run</code></pre>
+</p>
+
+<p>
+  Quando você acessar <code>http://localhost:5000/mocky/5185415ba171ea3a00704eed</code>
+  no seu browser você deve obter:
+</p>
+
+<p>
+  <pre><code>{"hello": "world"}</code></pre>
+</p>
+
+<p>
+  E o que é o <a href="https://www.mocky.io/">mocky.io</a>?
+  É uma RESTful API fictícia onde podemos simular respostas JSON.
+</p>
+{{/inline}}
+
+{{/blog/page}}
