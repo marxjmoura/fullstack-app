@@ -1,0 +1,25 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000"
+  },
+  "ReRoutes": [
+    {
+      "UpstreamPathTemplate": "/mocky/{path}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Put",
+        "Delete",
+        "Options"
+      ],
+      "DownstreamPathTemplate": "/v2/{path}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "www.mocky.io",
+          "Port": 80
+        }
+      ]
+    }
+  ]
+}
