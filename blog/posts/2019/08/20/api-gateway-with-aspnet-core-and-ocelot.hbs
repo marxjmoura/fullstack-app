@@ -104,6 +104,14 @@ Then add the Ocelot package to the project:
 </p>
 
 <p>
+  The <code>ApiGateway.csproj</code> file should look like this:
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/08/20/ApiGateway.csproj' }}</code></pre>
+</p>
+
+<p>
   Still in the root folder of the project let's create the <code>ocelot.json</code> configuration
   file with the following content:
 </p>
@@ -125,6 +133,9 @@ Then add the Ocelot package to the project:
     </li>
     <li>
       <code>ReRoutes.UpstreamPathTemplate</code>: The route pattern to match an API.
+    </li>
+    <li>
+      <code>ReRoutes.UpstreamHttpMethod</code>: Defines the HTTP verbs that will be routed by this configuration.
     </li>
     <li>
       <code>ReRoutes.DownstreamPathTemplate</code>:

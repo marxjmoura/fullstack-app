@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace ApiGateway
 {
-    public class Program
+    public sealed class Program
     {
         public static void Main(string[] args)
         {
