@@ -10,10 +10,9 @@ rm -rf dist
 git worktree add ./gh-pages gh-pages
 npm install
 npm run build
+rm -rf ./gh-pages/*
+cp -r ./dist/* ./gh-pages/
+echo "fullstack.app" > ./gh-pages/CNAME
 cd ./gh-pages
-ls -A | grep -v ".git$\|dist" | xargs rm -rf
-cp -r dist/* .
-echo "fullstack.app" > CNAME
-git add --all
-git commit -m "Publish"
+git commit -am "Publish"
 git push -f origin gh-pages
