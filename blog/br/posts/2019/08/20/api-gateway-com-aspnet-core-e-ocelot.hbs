@@ -104,7 +104,7 @@ A seguida adicione o pacote do Ocelot ao projeto:
 </p>
 
 <p>
-  O arquivo <code>ApiGateway.csproj</code> de estar parecido com isso:
+  O arquivo <code>ApiGateway.csproj</code> deve estar parecido com isso:
 </p>
 
 <p>
@@ -134,6 +134,9 @@ A seguida adicione o pacote do Ocelot ao projeto:
     </li>
     <li>
       <code>ReRoutes.UpstreamPathTemplate</code>: O padrão de rota que corresponde com uma API.
+    </li>
+    <li>
+      <code>ReRoutes.UpstreamHttpMethod</code>: Define os verbos HTTP que serão roteados por essa configuração.
     </li>
     <li>
       <code>ReRoutes.DownstreamPathTemplate</code>:
