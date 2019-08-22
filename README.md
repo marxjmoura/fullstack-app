@@ -1,6 +1,8 @@
-# Building Full-Stack Applications - Blog
+# Full-Stack Applications - Blog
 
-This is my [blog](https://fullstack.app). The place where I share my knowledge and experience.
+This is my [blog](https://fullstack.app). Here I write about microservices and web application development.
+
+You are also welcome to my open source project [Storefront Community](https://github.com/storefront-community).
 
 ## License
 
