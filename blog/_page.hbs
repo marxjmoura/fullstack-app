@@ -60,19 +60,25 @@
 
     <div class="author">
       <img src="/images/marxjmoura.jpg" alt="marxjmoura">
-      {{#if original}}
-      <p>
-        Eu sou Marx J. Moura. Neste blog escrevo sobre microsserviços e desenvolvimento de aplicações web.
-        Sinta-se bem-vindo(a) também ao meu projeto de código aberto
-        <a href="https://github.com/storefront-community">Storefront Community</a>.
-      </p>
-      {{else}}
-      <p>
-        I'm Marx J. Moura. In this blog I write about microservices and web application development.
-        You are also welcome to my open source project
-        <a href="https://github.com/storefront-community">Storefront Community</a>.
-      </p>
-      {{/if}}
+      <div>
+        <p class="mb-3">
+          {{#if original}}
+          Eu sou Marx J. Moura. Neste blog escrevo sobre arquitetura de microsserviços
+          e desenvolvimento de aplicações web.
+          {{else}}
+          I'm Marx J. Moura. In this blog I write about microservice architecture
+          and web application development.
+          {{/if}}
+        </p>
+        <p>
+          <a href="https://github.com/marxjmoura/" class="p-1">
+            <i class="fab fa-lg fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/marxjmoura/" class="p-1">
+            <i class="fab fa-lg fa-linkedin"></i>
+          </a>
+        </p>
+      </div>
     </div>
     {{#if disqus}}
     <div id="disqus_thread"></div>
