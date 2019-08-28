@@ -1,0 +1,169 @@
+{{#> blog/page
+  lang="pt"
+  title="Arquitetura de microserviços com ASP.NET Core"
+  description="Para implementar o padrão de arquitetura de microsserviços, nós construímos uma coleção de APIs com responsabilidades específicas que trabalham em conjunto e se comunicam através de eventos. Vamos ver como podemos fazer isso."
+  path="br/posts/2019/08/28/arquitetura-de-microsservicos-com-aspnet-core.html"
+  image="posts/2019/08/28/cover.png"
+  disqus="2019/08/28/microservice-architecture-with-aspnet-core"
+  original="/posts/2019/08/28/microservice-architecture-with-aspnet-core.html"
+}}
+
+{{#*inline "body-block"}}
+<small>
+  28 de agosto de 2019
+</small>
+
+<h1>
+  Arquitetura de microserviços com ASP.NET Core
+</h1>
+
+<figure>
+  <img src="/posts/2019/08/28/cover.svg" alt="Microservices">
+</figure>
+
+<p>
+  Para implementar o padrão de arquitetura de microsserviços, nós construímos uma coleção de APIs com responsabilidades
+  específicas que trabalham em conjunto e se comunicam através de eventos. Vamos ver como podemos fazer isso.
+</p>
+
+<p>
+  Antes de iniciarmos, é importante saber porque estamos implementando esse padrão.
+  Para saber mais sobre a arquitetura de microsserviços e seus benefícios, você pode ler
+  os artigos de <a href="https://microservices.io">Chris Richardson</a>.
+  Há também um artigo sobre microsserviços na
+  <a href="https://docs.microsoft.com/en-us/azure/architecture/microservices/introduction">documentação da Microsoft</a>.
+</p>
+
+<p>
+  Para apresentar e aprender como podemos implemetar a arquitetura de microsserviços, eu trabalharei em
+  uma solução focada no negócio de varejo de alimentos. Essa solução é um projeto de código aberto chamado
+  <a href="https://github.com/storefront-community">Storefront Community</a>.
+</p>
+
+<p>
+  O objetivo de negócio é reduzir o tempo de espera e oferecer comodidade para os clientes dos restaurantes.
+  Como solução iremos entregar um totem de autoatendimento (<i>self-order kiosk</i>) onde os clientes podem realizar
+  seus pedidos por conta própria. Tecnicamente, para construir um backend para essa solução adotando a arquitetura
+  de microsserviços, eu vou essencialmente seguir esses três passos:
+
+  <ol>
+    <li><a href="#criar-uma-api-gateway">Criar uma API gateway</a></li>
+    <li><a href="#configurar-um-event-bus">Configurar um event bus</a></li>
+    <li><a href="#construir-apis-baseadas-em-responsabilidade">Construir APIs baseadas em responsabilidade</a></li>
+  </ol>
+</p>
+
+<p>
+  Mas para garantir o desenvolvimento do projeto de forma sustentável,
+  os seguintes processos são muito importantes e devem ser considerados:
+
+  <ul>
+    <li>
+      <b>Automação de testes</b>: Testes automatizados nos permite testar eficientemente todas as funcionalidades
+      de nossos serviços antes de lançarmos uma nova versão. Isso minimiza consideravelmente a incidência de bugs
+      em novas e antigas funcionalidades (teste de regressão). Publicarei um post sobre como podemos escrever
+      <i>testes automatizados para ASP.NET Core API com xUnit</i>.
+    </li>
+    <li>
+      <b>CI/CD</b>: Uma ferramenta de integração contínua (CI - <i>continuous integration</i>)
+      e entrega contínua (CD - <i>continuous delivery</i>) executa tarefas automatizadas após alterações realizadas
+      no código fonte e submetidas pela equipe para o versionamento. Essas ferramentas podem executar testes e
+      armazenar artefatos (ex. versões compiladas, relatório de testes, etc) e podem também publicar novas versões
+      automaticamente. Escreverei um post sobre como podemos configurar o <i>ASP.NET Core no CircleCI</i>.
+    </li>
+    <li>
+      <b>Log de erros</b>: É muito importante monitorar nossas aplicações contra falhas. Há bibliotecas e
+      ferramentas de log (SaaS) que podemos usar para capturar, rastrear, gerenciar erros e notificar a equipe
+      automaticamente. Assim, erros serão reportados pela ferramenta e não pelos usuários, com possibilidade de
+      corrigir esses erros antes mesmo deles notarem o problema. Escreverei um post sobre
+      <i>log de erros em ASP.NET Core com Sentry</i>.
+    </li>
+  </ul>
+</p>
+
+<h2 id="criar-uma-api-gateway">
+  Criar uma API gateway
+</h2>
+
+<p>
+  Uma vez que decidimos implementar o padrão de arquitetura de microsserviços, nós precisaremos de uma API gateway que
+  atuará como um único ponto de entrada responsável por rotear todas as requisições para os outros serviços
+  (outras APIs).
+</p>
+
+<p>
+  Para realizar essa tarefa você pode consultar um post que escrevi sobre a implementação de uma
+  <a href="/posts/2019/08/20/api-gateway-with-aspnet-core-and-ocelot.html">API gateway com ASP.NET Core e Ocelot</a>.
+  Você também pode encontrar informações sobre esse tema na
+  <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/implement-api-gateways-with-ocelot">
+    documentação da Microsoft</a>.
+</p>
+
+<h2 id="configurar-um-event-bus">
+  Configurar um event bus
+</h2>
+
+<p>
+  Os serviços destinam-se a desempenhar uma parte específica do negócio e encapsulam sua lógica de
+  implementação e estratégia de persistência. Contudo, eles precisam se comunicar uns com os outros
+  a fim de trabalharem em conjunto para atender às necessidades do negócio.
+</p>
+
+<p>
+  A comunicação entre os serviços será realizada por meio de eventos e, para que seja estabelecida,
+  são necessários três agentes:
+
+  <ul>
+    <li>
+      <b>Event bus</b> (barramento): O canal por onde os eventos serão transmitidos.
+    </li>
+    <li>
+      <b>Publisher</b>: O serviço que irá emitir os eventos para o <i>event bus</i>
+      quando seus dados forem atualizados.
+    </li>
+    <li>
+      <b>Subscriber</b>: O serviço que escutará um ou mais eventos através do event bus e será notificado
+      quando esses eventos forem disparados.
+    </li>
+  </ul>
+</p>
+
+<p>
+  Publicarei um post sobre como podemos implementar um  <i>event bus com RabbitMQ e ASP.NET Core</i>.
+  Também sugiro que você leia o artigo da Microsoft sobre
+  <a href="https://docs.microsoft.com/en-us/dotnet/architecture/microservices/multi-container-microservice-net-applications/integration-event-based-microservice-communications">
+    implementação de comunicação entre microsserviços baseada em eventos (eventos de integração)
+  </a>
+  e artigos relacionados com o RabbitMQ.
+</p>
+
+<h2 id="construir-apis-baseadas-em-responsabilidade">
+  Construir APIs baseadas em responsabilidade
+</h2>
+
+<p>
+  Nós planejaremos nossos serviços para ter uma única responsabilidade, dessa forma, as equipes poderão focar
+  em desenvolver, manter e publicar cada um de maneira independente.
+</p>
+
+<p>
+  Entender e definir uma única responsabilidade para cada serviço é uma tarefa delicada e nós devemos fazer isso
+  de forma planejada. Tenha em mente que nós iremos refatorar e continuamente melhorar nossa estratégia com base
+  nos requisitos do negócio.
+</p>
+
+<p>
+  Esse projeto visa atender uma necessidade do negócio de varejo de alimentos.
+  Tecnicamente, eu irei construir um backend para um
+  <a href="https://kiosk.storefront.community">totem de autoatendimento</a>
+  e também para um <a href="https://menu.storefront.community">menu board digital</a>.
+  Esses dois aplicativos nos dão uma boa ideia do que pretendemos alcançar.
+</p>
+
+<p>
+  Nos próximos posts eu escreverei sobre a arquitetura de microsserviços planejada e como ela será construída.
+</p>
+
+{{/inline}}
+
+{{/blog/page}}
