@@ -1,8 +1,7 @@
 # Full-Stack Applications - Blog
 
-This is my [blog](https://fullstack.app). Here I write about microservices and web application development.
-
-You are also welcome to my open source project [Storefront Community](https://github.com/storefront-community).
+This is my [blog](https://fullstack.app).
+Here I write about microservices architecture and web application development.
 
 ## License
 
