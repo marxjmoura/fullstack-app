@@ -2,20 +2,17 @@
 
 set -e
 
+rm -rf dist
+[[ `git worktree list | grep gh-pages` ]] && git worktree remove ./gh-pages --force
+[[ `git branch --list gh-pages` ]] && git branch -D gh-pages
+rm -rf ./gh-pages
+
 git checkout master
 git pull origin master
-
-rm -rf dist
 
 npm install
 npm run build
 
-if [[ `git branch --list gh-pages` ]] then
-  git worktree remove ./gh-pages --force
-  git branch -D gh-pages
-fi
-
-rm -rf ./gh-pages
 git worktree add ./gh-pages gh-pages
 
 cp -r ./dist/* ./gh-pages/
