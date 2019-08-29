@@ -1,0 +1,98 @@
+{{#> blog/page
+  lang="pt"
+  title="Instalar .NET Core SDK no Ubuntu"
+  description="Neste post apresentarei uma maneira simples de instalar manualmente o .NET Core SDK no Ubuntu com poucos comandos."
+  path="br/posts/2019/08/29/instalar-netcore-sdk-no-ubuntu.html"
+  image="posts/2019/08/29/cover.png"
+  disqus="2019/08/29/install-netcore-sdk-on-ubuntu"
+  original="/posts/2019/08/29/install-netcore-sdk-on-ubuntu.html"
+}}
+
+{{#*inline "body-block"}}
+<small>
+  29 de agosto de 2019
+</small>
+
+<h1>
+  Instalar .NET Core SDK no Ubuntu
+</h1>
+
+<figure>
+  <img src="/posts/2019/08/29/cover.png" alt=".NET Core SDK no Ubuntu">
+</figure>
+
+<p>
+  Neste post apresentarei uma maneira simples de instalar manualmente o .NET Core SDK no Ubuntu.
+  Para isso nós faremos o download dos binários a partir do CDN da Microsoft e executaremos
+  poucos comandos para realizar a instalação.
+</p>
+
+<p>
+  A documentação da Microsoft já possui um
+  <a href="https://dotnet.microsoft.com/download/linux-package-manager/ubuntu19-04/sdk-2.2.401">guia passo a passo</a>
+  de como instalar o .NET Core SDK no Ubuntu. Eu somente apresentarei uma maneira alternativa de como podemos fazer
+  isso usando poucas linhas de comando.
+</p>
+
+<p>
+  Antes de fazer o download vamos definir qual versão iremos instalar.
+  Você pode saber a versão atual na <a href="https://dotnet.microsoft.com/download/dotnet-core">página de download</a>
+  ou visualizar todas as versões já lançadas na <a href="https://github.com/dotnet/core/releases">página do GitHub</a>.
+  Após escolher a versão, substitua a palavra <code>VERSION</code> com a versão desejada na seguinte URL:
+</p>
+
+<p>
+  <pre><code>https://dotnetcli.blob.core.windows.net/dotnet/Sdk/VERSION/dotnet-sdk-VERSION-linux-x64.tar.gz</code></pre>
+</p>
+
+<p>
+  Eu escolhi a versão <b>2.2.401</b> por ser a versão estável mais atual no momento que escrevi este post.
+  Para fazer o download dessa versão para o diretório atual execute o seguinte comando:
+</p>
+
+<p>
+  <pre><code>curl -SL -o dotnet.tar.gz https://dotnetcli.blob.core.windows.net/dotnet/Sdk/2.2.401/dotnet-sdk-2.2.401-linux-x64.tar.gz</code></pre>
+</p>
+
+<p>
+  Em seguida, vamos criar o diretório <code>dotnet</code> usando a flag <code>-p</code> para criar os diretórios
+  pais se necessário:
+</p>
+
+<p>
+  <pre><code>sudo mkdir -p /usr/share/dotnet</code></pre>
+</p>
+
+<p>
+  Quando o download terminar vamos extrair os binários do .NET Core SDK no diretório <code>dotnet</code>
+  que acabamos de criar:
+</p>
+
+<p>
+  <pre><code>sudo tar -zxf dotnet.tar.gz -C /usr/share/dotnet</code></pre>
+</p>
+
+<p>
+  Por último vamos criar um link simbólico para o diretório <code>/usr/bin</code>,
+  assim nós poderemos executar o comando <code>dotnet</code> a partir de qualquer diretório:
+</p>
+
+<p>
+  <pre><code>sudo ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet</code></pre>
+</p>
+
+<p>
+  Agora, para certificar que a instalação foi concluída com sucesso:
+</p>
+
+<p>
+  <pre><code>dotnet --version</code></pre>
+</p>
+
+<p>
+  Você deverá ver a versão que você acabou de instalar.
+</p>
+
+{{/inline}}
+
+{{/blog/page}}
