@@ -1,0 +1,128 @@
+<!doctype html><html lang="pt"><head><meta charset="utf-8"><meta name="theme-color" content="#ffffff"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="author" content="Marx J. Moura"><meta name="description" content="Este é um guia passo a passo de como configurar o Nginx no Ubuntu Server para executar uma única ou múltiplas ASP.NET Core APIs em um domínio (sem subdomínio)."><meta property="og:title" content="Hospedar ASP.NET Core no Linux com Nginx"><meta property="og:image" content="https://fullstack.app/posts/2019/08/18/cover.png"><meta property="og:description" content="Este é um guia passo a passo de como configurar o Nginx no Ubuntu Server para executar uma única ou múltiplas ASP.NET Core APIs em um domínio (sem subdomínio)."><meta property="og:url" content="https://fullstack.app/br/posts/2019/08/18/hospedar-aspnet-core-no-linux-com-nginx.html"><title>Hospedar ASP.NET Core no Linux com Nginx</title><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700&display=swap"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous"><link rel="stylesheet" href="/blog.min.css"></head><body><div class="container"><div class="text-right mb-3"><div class="dropdown"><button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">BR</button><div class="dropdown-menu"><a href="" class="dropdown-item">BR</a> <a href="/posts/2019/08/18/host-aspnet-core-on-linux-with-nginx.html" class="dropdown-item">EN</a></div></div></div><div class="header"><h1><a href="/br">Full-Stack Applications</a></h1><div class="techs"><svg><use href="/images/techs.svg#netcore"/></svg> <svg><use href="/images/techs.svg#vue"/></svg> <svg><use href="/images/techs.svg#postgresql"/></svg> <svg><use href="/images/techs.svg#rabbitmq"/></svg> <svg><use href="/images/techs.svg#nginx"/></svg> <svg><use href="/images/techs.svg#ubuntu"/></svg> <svg><use href="/images/techs.svg#aws"/></svg> <svg><use href="/images/techs.svg#github"/></svg> <svg><use href="/images/techs.svg#circleci"/></svg></div></div><small>18 de agosto de 2019</small><h1>Hospedar ASP.NET Core no Linux com Nginx</h1><figure><img src="/posts/2019/08/18/cover.svg" alt=".NET Core + Linux + Nginx"></figure><p>Este é um guia passo a passo de como configurar o Nginx no Ubuntu Server para executar uma única ou múltiplas ASP.NET Core APIs em um domínio (sem subdomínio).</p><p>Esse post é bem extenso então vamos dividí-lo em etapas para alcançar isso:</p><ol><li><a href="#instalar-o-nginx">Instalar o Nginx</a></li><li><a href="#configurar-o-firewall">Configurar o firewall</a></li><li><a href="#configurar-o-nginx">Configurar o Nginx</a></li><li><a href="#criar-um-server-block-para-o-dominio">Criar um <i>server block</i> para o domínio</a></li><li><a href="#configurar-a-aspnet-core-api">Configurar a ASP.NET Core API</a><ol><li><a href="#configurar-a-aspnet-core-api-como-um-servico">Configurar a ASP.NET Core API como um serviço</a></li><li><a href="#configurar-uma-unica-aspnet-core-api-no-dominio">Configurar uma única ASP.NET Core API no domínio</a></li><li><a href="#configurar-multiplas-aspnet-core-api-em-um-dominio">Configurar múltiplas ASP.NET Core APIs em um domínio</a></li></ol></li></ol><p></p><h2 id="instalar-o-nginx">1. Instalar o Nginx <a href="#instalar-o-nginx"></a></h2><p>Primeiro precisamos do Nginx instalado no servidor. Nós podemos usar o <code>apt-get</code> para instalar.</p><p><pre><code>sudo apt-get install nginx</code></pre></p><p>Depois da instalação o servidor já deve está executando. Para checar o <i>status</i> do Nginx execute o seguinte comando:</p><p><pre><code>sudo systemctl status nginx</code></pre></p><h2 id="configurar-o-firewall">2. Configurar o firewall <a href="#configurar-o-firewall"></a></h2><p>Após instalar o Nginx pode ser preciso abrir as portas HTTP e HTTPS no firewall. Se você está usando o Amazon EC2 (assim como eu) apenas use o console da AWS (<i>AWS Management Console</i>) para fazer isso e você estará pronto para ir para o <a href="#configurar-o-nginx">próximo tópico</a>.</p><p>Vamos listar as configurações de aplicação que o <code>ufw</code> conhece:</p><p><pre><code>sudo ufw app list</code></pre></p><p>Existem três perfis disponíveis para o Nginx abrir as portas 80 (HTTP) e 443 (HTTPS):</p><ul><li><b>Nginx Full:</b> Esse perfil abri ambas as portas 80 e 443.</li><li><b>Nginx HTTP:</b> Esse perfil abri somente a porta 80.</li><li><b>Nginx HTTPS:</b> Esse perfil abri somente a porta 443.</li></ul><p></p><p>Vamos executar o seguinte comando para habilitar o perfil <b>Nginx Full</b>.</p><p><pre><code>sudo ufw allow 'Nginx Full'</code></pre></p><p>Agora vamos executar o seguinte comando para verificar a alteração:</p><p><pre><code>sudo ufw status</code></pre></p><h2 id="configurar-o-nginx">3. Configurar o Nginx <a href="#configurar-o-nginx"></a></h2><p>A configuração a seguir é a que eu estou usando e deve ser o suficiente para iniciar. Caso você esteja interessado no detalhes, a <a href="https://nginx.org/en/docs/">documentação do Nginx</a> é um bom lugar para referência e também <a href="https://devdocs.io/nginx/">devdocs.io/nginx</a>.</p><p>Crie o arquivo de configuração <code>/etc/nginx/proxy.config</code> com o conteúdo:</p><p><pre><code>proxy_buffer_size 128k;
+proxy_buffers 4 256k;
+proxy_busy_buffers_size 256k;
+large_client_header_buffers 4 16k;</code></pre></p><p>Modifique o arquivo <code>/etc/nginx/nginx.config</code> e substitua com o seguinte conteúdo:</p><p><pre><code>user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+include /etc/nginx/modules-enabled/*.config;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  sendfile on;
+  tcp_nopush on;
+  tcp_nodelay on;
+  types_hash_max_size 2048;
+  keepalive_timeout 30;
+  server_tokens off;
+
+  include /etc/nginx/mime.types;
+  include /etc/nginx/conf.d/*.config;
+  include /etc/nginx/sites-enabled/*;
+  include /etc/nginx/proxy.config;
+
+  default_type application/octet-stream;
+
+  log_format custom &#x27;$remote_addr - $remote_user [$time_local] &#x27;
+                    &#x27;&quot;$request&quot; $status $body_bytes_sent &#x27;
+                    &#x27;&quot;$http_referer&quot; &quot;$http_user_agent&quot; &#x27;
+                    &#x27;&quot;$http_x_forwarded_for&quot; $request_id &#x27;;
+
+  access_log /var/log/nginx/access.log custom;
+  error_log  /var/log/nginx/error.log;
+}
+</code></pre></p><p>Edite o <i>server block</i> padrão para tratar <code>server_name</code> desconhecido retornando o <i>status code</i> 444 (conexão fechada sem resposta &mdash; <i>connection closed without response</i>). Modifique o <i>server block</i> padrão do Nginx <code>/etc/nginx/sites-available/default</code> e substitua com o seguinte conteúdo:</p><p><pre><code>server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  return 444;
+}</code></pre></p><p>Teste a configuração do Nginx para verificar se a sintaxe está correta:</p><p><pre><code>sudo nginx -t</code></pre></p><p>Se não houver erros, reinicie o Nginx.</p><p><pre><code>sudo systemctl restart nginx</code></pre></p><h2 id="criar-um-server-block-para-o-dominio">4. Crie um <i>server block</i> para o domínio <a href="#criar-um-server-block-para-o-dominio"></a></h2><p>Primeiro vamos criar uma pasta para o domínio (ex.: example.com) dentro do diretório <code>/var/www</code> usando a flag <code>-p</code> para criar os diretórios pais se necessário:</p><p><pre><code>sudo mkdir -p /var/www/example.com</code></pre></p><p>Em seguida, para evitar qualquer problema de permissão, torne o usuário do Nginx <code>www-data</code> proprietário do diretório que acabamos de criar:</p><p><pre><code>sudo chown -R www-data: /var/www/example.com</code></pre></p><p>Permita o proprietário e grupos para escrever no diretório:</p><p><pre><code>sudo chmod -R 775 /var/www/example.com</code></pre></p><p>Adicione outro usuário para o grupo <code>www-data</code> caso precise (o usuário ubuntu da Amazon EC2, por exemplo):</p><p><pre><code>sudo usermod -a -G www-data ubuntu</code></pre></p><p>Agora vamos criar o <i>server block</i> (um arquivo de configuração) <code>/etc/nginx/sites-available/example.com</code> com o seguinte conteúdo:</p><p><pre><code>server {
+  listen 80;
+  listen [::]:80;
+
+  server_name example.com *.example.com;
+
+  location / {
+    return 200 &quot;OK&quot;;
+  }
+}</code></pre></p><p>Para habilitar o novo <i>server block</i> é necessário criar um link simbólico partindo do arquivo no diretório <code>sites-available</code> para o diretório <code>sites-enabled</code>, o qual é lido pelo Nginx quando é iniciado:</p><p><pre><code>sudo ln -sfn /etc/nginx/sites-available/example.com /etc/nginx/sites-enabled/</code></pre></p><p>Então teste a sintaxe da configuração e reinicie o Nginx:</p><p><pre><code>sudo nginx -t</code></pre><pre><code>sudo systemctl restart nginx</code></pre></p><p>Agora você deve obter o texto "OK" quando acessar http://example.com no seu navegador.</p><h2 id="configurar-a-aspnet-core-api">5. Configurar a ASP.NET Core API <a href="#configurar-a-aspnet-core-api"></a></h2><p>Basicamente nós precisamos configurar a ASP.NET Core API como um serviço e configurar o Nginx como um proxy reverso. A <a href="https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx">documentação da Microsoft</a> me ajudou muito.</p><p>Durante esse processo os seguintes arquivos serão criados ou editados:</p><p></p><ul><code>/etc/systemd/system/my-example-api.service:</code> Arquivo de configuração do serviço para a ASP.NET Core API.<li><code>/etc/nginx/proxy.config:</code> Arquivo de configuração do proxy.</li><li><code>/etc/nginx/nginx.config:</code> Arquivo de configuração do Nginx.</li><li><code>/etc/nginx/sites-available/default:</code> <i>Server block</i> padrão.</li><li><code>/etc/nginx/sites-available/example.com:</code> <i>Server block</i> do domínio.</li></ul><p></p><h3 id="configurar-a-aspnet-core-api-como-um-servico">5.1. Configurar a ASP.NET Core API como um serviço</h3><p>Nginx não é configurado para gerenciar processos do Kestrel. Por isso, vamos utilizar o <code>systemd</code> para criar um arquivo de configuração do serviço para comandar (iniciar, parar, reiniciar) e monitorar a API.</p><p>Crie um arquivo de configuraração para o serviço:</p><p><pre><code>sudo vim /etc/systemd/system/my-example-api.service</code></pre></p><p>A seguir está um exemplo de arquivo de configuração do serviço para <i>My Example API</i> (se necessário, altere para atender o seu caso de uso):</p><p><pre><code>[Unit]
+Description&#x3D;My Example API
+
+[Service]
+WorkingDirectory&#x3D;/var/www/example-api/current
+ExecStart&#x3D;/usr/bin/dotnet /var/www/example-api/current/Api.dll
+Restart&#x3D;always
+RestartSec&#x3D;10
+KillSignal&#x3D;SIGINT
+SyslogIdentifier&#x3D;my-example-api
+User&#x3D;www-data
+Environment&#x3D;ASPNETCORE_ENVIRONMENT&#x3D;Production
+Environment&#x3D;ASPNETCORE_URLS&#x3D;http://localhost:5000
+Environment&#x3D;DOTNET_PRINT_TELEMETRY_MESSAGE&#x3D;false
+EnvironmentFile&#x3D;/etc/my.config
+
+[Install]
+WantedBy&#x3D;multi-user.target</code></pre></p><p>Inicie o serviço e verifique que está executando.</p><p><pre><code>sudo systemctl start my-example-api.service</code></pre><pre><code>sudo systemctl status my-example-api.service</code></pre></p><p>Uma vez que a API que está sendo executada no Kestrel é gerenciada pelo <code>systemd</code>, todos os eventos e processos são logados para o <i>journal</i> (um componente do <code>systemd</code>). Para visualizar os registros do serviço do API <code>my-example-api.service</code>, use o seguinte comando:</p><p><pre><code>sudo journalctl -fu my-example-api.service</code></pre></p><p>Para filtrar por período e reduzir o número de registros retornados:</p><p><pre><code>sudo journalctl -fu my-example-api.service --since "2019-01-01" --until "2019-01-20 06:00"</code></pre></p><h3 id="configurar-uma-unica-aspnet-core-api-no-dominio">5.2. Configuar uma única ASPI.NET Core API no domínio</h3><p>É necessário configurar o Nginx como um proxy reverso para encaminhar requisições feitas de http://example.com para a ASP.NET Core API executandp no Kestrel em http://localhost:5000. Modifique o <i>server block</i> <code>/etc/nginx/sites-available/example.com</code> e substitua o conteúdo com o seguinte:</p><p><pre><code>server {
+  listen 80;
+  listen [::]:80;
+
+  server_name example.com *.example.com;
+
+  location / {
+    proxy_pass http://localhost:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection keep-alive;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+    fastcgi_buffers 16 16k;
+    fastcgi_buffer_size 32k;
+  }
+}</code></pre></p><p>Então teste a sintaxe da configuração e reinicie o Nginx:</p><p><pre><code>sudo nginx -t</code></pre><pre><code>sudo systemctl restart nginx</code></pre></p><p>A API estará disponível em http://example.com.</p><h3 id="configurar-multiplas-aspnet-core-api-em-um-dominio">5.3. Configurar múltiplas ASP.NET Core APIs em um domínio</h3><p>Nós iremos configurar o Nginx como um proxy reverso para encaminhar as requisições de várias ASP.NET Core APIs usando a diretiva <code>rewrite</code>. Modifique <code>/etc/nginx/sites-available/example.com</code> e substitua o conteúdo com o seguinte:</p><p><pre><code>server {
+  listen 80;
+  listen [::]:80;
+
+  server_name example.com *.example.com;
+
+  location /myapi1 {
+    rewrite /myapi1/?(.*) /$1 break;
+    proxy_pass http://localhost:5000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection keep-alive;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+    fastcgi_buffers 16 16k;
+    fastcgi_buffer_size 32k;
+  }
+
+  location /myapi2 {
+    rewrite /myapi2/?(.*) /$1 break;
+    proxy_pass http://localhost:5010;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection keep-alive;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache_bypass $http_upgrade;
+    fastcgi_buffers 16 16k;
+    fastcgi_buffer_size 32k;
+  }
+}</code></pre></p><p>Você precisará ter um arquivo de configuração para cada API para executar ambas as APIs como um serviço. Apenas repita <a href="#configurar-a-aspnet-core-api-como-um-servico">o passo já descrito neste post</a> prestando atenção nos caminhos e na porta usada.</p><p>Então teste a sintaxe da configuração e reinicie o Nginx:</p><p><pre><code>sudo nginx -t</code></pre><pre><code>sudo systemctl restart nginx</code></pre></p><p>Agora ambas as APIs <code>myapi1</code> e <code>myapi2</code> estarão disponíveis no mesmo servidor em http://example.com/myapi1 e http://example.com/myapi2 respectivamente.</p><div class="author"><img src="/images/marxjmoura.jpg" alt="marxjmoura"><div><p class="mb-3">Eu sou Marx J. Moura. Neste blog escrevo sobre arquitetura de microsserviços e desenvolvimento de aplicações web.</p><p><a href="https://github.com/marxjmoura/" class="p-1"><i class="fab fa-lg fa-github"></i> </a><a href="https://www.linkedin.com/in/marxjmoura/" class="p-1"><i class="fab fa-lg fa-linkedin"></i></a></p></div></div><div id="disqus_thread"></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/js/all.min.js" integrity="sha256-xzrHBImM2jn9oDLORlHS1/0ekn1VyypEkV1ALvUx8lU=" crossorigin="anonymous"></script><script src="/blog.min.js"></script><script>var disqus_config = function () {
+      this.page.url = 'https://fullstack.app/br/posts/2019/08/18/hospedar-aspnet-core-no-linux-com-nginx.html';
+      this.page.identifier = '2019/08/18/host-aspnet-core-on-linux-with-nginx';
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://fullstack-app.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', + new Date());
+      (d.head || d.body).appendChild(s);
+    })();</script></body></html>
