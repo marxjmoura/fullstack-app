@@ -26,8 +26,11 @@
           {{#if original}} BR {{else}} EN {{/if}}
         </button>
         <div class="dropdown-menu">
-          <a href="/{{translation}}" class="dropdown-item">BR</a>
+          {{#if original}}
           <a href="/{{original}}" class="dropdown-item">EN</a>
+          {{else}}
+          <a href="/{{translation}}" class="dropdown-item">BR</a>
+          {{/if}}
         </div>
       </div>
     </div>
