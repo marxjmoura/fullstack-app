@@ -26,7 +26,7 @@ gulp.task('build-js', () => {
 })
 
 gulp.task('build-html', () => {
-  return gulp.src(['blog/**/*.hbs'], { base: './blog' })
+  return gulp.src('blog/**/*.hbs', { base: './blog' })
     .pipe(handlebars())
     .pipe(rename({ extname: '.html' }))
     .pipe(htmlmin({ collapseWhitespace: true })
@@ -35,7 +35,7 @@ gulp.task('build-html', () => {
 })
 
 gulp.task('copy-assets', () => {
-  return gulp.src('blog/**/*.{svg,jpg,png,ico}')
+  return gulp.src(['blog/**/*.{svg,jpg,png,ico}', '!blog/**/_*.*'])
     .pipe(gulp.dest('dist'))
 })
 
