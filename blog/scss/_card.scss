@@ -1,0 +1,34 @@
+.card {
+  flex-direction: row;
+  align-items: center;
+  margin: .5rem 0;
+  color: $body-color;
+  transition: box-shadow .15s ease-in-out;
+
+   &:hover {
+    border-color: $input-focus-border-color;
+    box-shadow: $input-btn-focus-box-shadow;
+    color: $body-color;
+    text-decoration: none;
+  }
+
+   .card-header {
+    border: none;
+    padding-right: 0;
+
+     svg {
+      height: 64px;
+      width: 64px;
+    }
+  }
+
+   .card-title {
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: .2rem;
+  }
+
+   .card-text {
+    font-size: 1rem;
+  }
+}
