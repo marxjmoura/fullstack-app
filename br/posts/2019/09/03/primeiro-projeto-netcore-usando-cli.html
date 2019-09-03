@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="theme-color" content="#ffffff"><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name="author" content="Marx J. Moura"><meta name="description" content="Vamos criar nosso primeiro projeto .NET Core usando a CLI e entender o estrutura de arquivos inicital."><meta property="og:title" content="Primeiro projeto .NET Core usando CLI"><meta property="og:image" content="https://fullstack.app/posts/2019/09/03/cover.png"><meta property="og:description" content="Vamos criar nosso primeiro projeto .NET Core usando a CLI e entender o estrutura de arquivos inicital."><meta property="og:url" content="https://fullstack.app/br/posts/2019/09/03/primeiro-projeto-netcore-usando-cli.html"><title>Primeiro projeto .NET Core usando CLI</title><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700&display=swap"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous"><link rel="stylesheet" href="/blog.min.css?v=1.2.0"></head><body><div class="container"><div class="text-right mb-3"><div class="dropdown"><button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">BR</button><div class="dropdown-menu"><a href="/posts/2019/09/03/first-netcore-project-using-cli.html" class="dropdown-item">EN</a></div></div></div><div class="header"><h1><a href="/br">Full-Stack Applications</a></h1><div class="techs"><svg><use href="/images/techs.svg#netcore"/></svg> <svg><use href="/images/techs.svg#vue"/></svg> <svg><use href="/images/techs.svg#postgresql"/></svg> <svg><use href="/images/techs.svg#rabbitmq"/></svg> <svg><use href="/images/techs.svg#nginx"/></svg> <svg><use href="/images/techs.svg#ubuntu"/></svg> <svg><use href="/images/techs.svg#aws"/></svg> <svg><use href="/images/techs.svg#github"/></svg> <svg><use href="/images/techs.svg#circleci"/></svg></div></div><form method="get" action="https://www.google.com/search" class="google-search"><input type="hidden" name="sitesearch" value="fullstack.app"> <input type="text" name="q" class="form-control form-control-sm" placeholder="Google"></form><small>03 de setembro de 2019</small><h1>Primeiro projeto .NET Core usando CLI</h1><figure><img src="/posts/2019/09/03/cover.png" alt="ASP.NET Core project"></figure><p>Vamos criar nosso primeiro projeto .NET Core usando a <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/">CLI</a> e entender o estrutura de arquivos inicial.</p><p>Neste post estou assumindo que você já saiba <a href="/br/posts/2019/08/30/iniciando-com-netcore.html">como configurar o seu ambiente de desenvolvimento</a> e já tenha instalado tudo que precisaremos para criar nosso primeiro projeto e continuar nosso treinamento.</p><p>O comando a seguir criará um projeto vazio dentro do diretório <code>products-api</code>. Vale ressaltar que você também pode criar projetos usando <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new#template-options">templates predefinidos</a>.</p><p><pre><code>dotnet new web -o products-api</code></pre></p><p>Agora, vamos abrir o projeto com o VS Code.</p><p><pre><code>code products-api</code></pre></p><p>O diretório do projeto deve conter esses arquivos:</p><ul><li><b>*.csproj</b>: Arquivo de configuração do projeto.</li><li><b>appsettings.json</b>: Arquivo de configuração para os <i>packages</i> (bibliotecas ou frameworks) adicionados ao projeto.</li><li><b>appsettings.Development.json</b>: Sobrescreve o arquivo <code>appsettings.json</code> quando o projeto é executado em ambiente de desenvolvimento.</li><li><b>Startup.cs</b>: Classe usada para definir quais e como os serviços dos <i>packages</i> adicionados ao projeto serão utilizados.</li><li><b>Program.cs</b>: Classe usada pela ferramenta <code>dotnet</code> para iniciar o projeto.</li></ul><p></p><p>Eu irei apresentar esses arquivos, mas nos aprofundaremos naturalmente ao longo do treinamento. Você pode ter notado as pastas <code>bin</code> e <code>obj</code>. Essas pastas são o local onde os binários vão depois de compilar o código-fonte do projeto.</p><h2 id="csproj">*.csproj <a href="#csproj"></a></h2><p>A configuração do projeto é mantida neste arquivo de formato <a href="https://www.w3.org/XML/">XML</a>. Através desse arquivo nós podemos adicionar ou remover <a href="https://www.nuget.org">NuGet</a> <i>packages</i>, incluir ou excluir arquivos para publicação, definir a versão do .NET Core, alterar o <i>namespace</i> padrão das classes, e assim por diante.</p><p>Vamos alterar o <i>namespace</i> no elemento <code>RootNamespace</code> para seguir a <a href="https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces">convenção de nomenclatura</a> para <i>namespaces</i> (<code>UpperCamelCase</code>). Seguir a convenção de nomenclaturas melhora a leitura do código-fonte por outras pessoas da equipe, facilitando identificar o que representam certas partes do código (atributos, propriedades, constantes, etc), entre outros benefícios.</p><p>Depois de fazer isso seu arquivo <code>products-api.csproj</code> deverá estar parecido com este:</p><p><pre><core>&lt;Project Sdk&#x3D;&quot;Microsoft.NET.Sdk.Web&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;netcoreapp2.2&lt;/TargetFramework&gt;
+    &lt;AspNetCoreHostingModel&gt;InProcess&lt;/AspNetCoreHostingModel&gt;
+    &lt;RootNamespace&gt;ProductsApi&lt;/RootNamespace&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include&#x3D;&quot;Microsoft.AspNetCore.App&quot; /&gt;
+    &lt;PackageReference Include&#x3D;&quot;Microsoft.AspNetCore.Razor.Design&quot; Version&#x3D;&quot;2.2.0&quot; PrivateAssets&#x3D;&quot;All&quot; /&gt;
+  &lt;/ItemGroup&gt;
+&lt;/Project&gt;
+</core></pre></p><h2 id="appsettings">appsettings.json <a href="#appsettings"></a></h2><p>Neste arquivo de formato <a href="https://www.json.org">JSON</a>, manteremos a configuração dos <i>packages</i> quando necessário. Você pode ter um arquivo que contenha as configurações comuns a todos os ambientes e criar um arquivo específico para cada ambiente: desenvolvimento, homologação, produção.</p><p>Seu arquivo <code>appsettings.json</code> deve estar parecido com este:</p><p><pre><core>{
+  &quot;Logging&quot;: {
+    &quot;LogLevel&quot;: {
+      &quot;Default&quot;: &quot;Warning&quot;
+    }
+  },
+  &quot;AllowedHosts&quot;: &quot;*&quot;
+}
+</core></pre></p><h2 id="program">Program.cs <a href="#program"></a></h2><p>Nosso projeto é na verdade um projeto console. Ele será inicializado pelo .NET Core invocando o método estático <code>Main()</code>.</p><p>Removeremos as diretivas <code>using</code> desnecessárias e atualizaremos o <i>namespace</i>. Remover as diretivas desnecessárias é mais um passo para manter o nosso código limpo. Seu <code>Program.cs</code> deve estar algo parecido com este:</p><p><pre><core>﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
+namespace ProductsApi
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateWebHostBuilder(args).Build().Run();
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) &#x3D;&gt;
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup&lt;Startup&gt;();
+    }
+}
+</core></pre></p><h2 id="startup">Startup.cs <a href="#startup"></a></h2><p>Nós usaremos esta classe para configurar os serviços e dependências que serão utilizados por outras classes no projeto através do padrão de projeto injeção de dependência (DI - <i>Dependency Injection</i>). Você verá esses dois métodos que basicamente significam:</p><ul><li><b>ConfigureServices</b>: Adicionar serviços para o container IoC. A configuração do serviço pode ser lida do arquivo <code>appsettings.json</code>.</li><li><b>Configure</b>: Usar um ou mais serviços configurados como um <i>middleware</i> no <i>pipeline</i> da requisição para processar a resposta.</li></ul><p></p><p>Você pode ler a documentação da Microsoft para saber mais detalhes sobre a <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup/">classe Startup</a>, <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection/">injeção de dependência</a> e <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/"><i>middlewares</i></a>.</p><p>Nós removeremos as diretivas <code>using</code> desnecessárias e atualizaremos o <i>namespace</i>. Seu arquivo <code>Startup.cs</code> deve estar parecido com este:</p><p><pre><core>﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace products_api
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.Run(async (context) &#x3D;&gt;
+            {
+                await context.Response.WriteAsync(&quot;Hello World!&quot;);
+            });
+        }
+    }
+}
+</core></pre></p><p>Execute o projeto pressionando F5 no VS Code. Agora, abra o seu navegador e acesse <code>http://localhost:5000</code> (porta padrão das aplicações ASP.NET Core). Você deverá ver o texto <code>Hello World!</code>.</p><p>Também é possível executar o projeto diretamente da CLI, mas dessa forma nós não conseguiremos depurar com o VS Code. A partir do diretório raíz do projeto (onde está o arquivo <code>csproj</code>) execute o seguinte comando:</p><p><pre><code>dotnet run</code></pre></p><p>No próximo post nós começaremos a falar sobre RESTful API, padrão MVC e criaremos nosso primeiro <i>endpoint</i> que responderá no formato JSON.</p><div class="author"><img src="/images/marxjmoura.jpg" alt="marxjmoura"><div><p class="mb-3">Eu sou Marx J. Moura. Neste blog escrevo sobre arquitetura de microsserviços e desenvolvimento de aplicações web.</p><p><a href="https://github.com/marxjmoura/" class="p-1"><i class="fab fa-lg fa-github"></i> </a><a href="https://www.linkedin.com/in/marxjmoura/" class="p-1"><i class="fab fa-lg fa-linkedin"></i></a></p></div></div><div id="disqus_thread"></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/js/all.min.js" integrity="sha256-xzrHBImM2jn9oDLORlHS1/0ekn1VyypEkV1ALvUx8lU=" crossorigin="anonymous"></script><script src="/blog.min.js?v=1.2.0"></script><script>var disqus_config = function () {
+      this.page.url = 'https://fullstack.app/br/posts/2019/09/03/primeiro-projeto-netcore-usando-cli.html';
+      this.page.identifier = '2019/09/03/first-netcore-project-using-cli';
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://fullstack-app.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', + new Date());
+      (d.head || d.body).appendChild(s);
+    })();</script></body></html>
