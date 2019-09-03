@@ -1,0 +1,216 @@
+{{#> blog/page
+  lang="en"
+  title="Primeiro projeto .NET Core usando CLI"
+  description="Vamos criar nosso primeiro projeto .NET Core usando a CLI e entender o estrutura de arquivos inicital."
+  image="posts/2019/09/03/cover.png"
+  path="br/posts/2019/09/03/primeiro-projeto-netcore-usando-cli.html"
+  original="posts/2019/09/03/first-netcore-project-using-cli.html"
+  disqus="2019/09/03/first-netcore-project-using-cli"
+}}
+
+{{#*inline "body-block"}}
+<small>
+  03 de setembro de 2019
+</small>
+
+<h1>
+  Primeiro projeto .NET Core usando CLI
+</h1>
+
+<figure>
+  <img src="/posts/2019/09/03/cover.png" alt="ASP.NET Core project">
+</figure>
+
+<p>
+  Vamos criar nosso primeiro projeto .NET Core usando a
+  <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/">CLI</a>
+  e entender o estrutura de arquivos inicial.
+</p>
+
+<p>
+  Neste post estou assumindo que você já saiba
+  <a href="/br/posts/2019/08/30/iniciando-com-netcore.html">como configurar o seu ambiente de desenvolvimento</a> e
+  já tenha instalado tudo que precisaremos para criar nosso primeiro projeto e continuar nosso treinamento.
+</p>
+
+<p>
+  O comando a seguir criará um projeto vazio dentro do diretório <code>products-api</code>.
+  Vale ressaltar que você também pode criar projetos usando
+  <a href="https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new#template-options">templates predefinidos</a>.
+</p>
+
+<p>
+  <pre><code>dotnet new web -o products-api</code></pre>
+</p>
+
+<p>
+  Agora, vamos abrir o projeto com o VS Code.
+</p>
+
+<p>
+  <pre><code>code products-api</code></pre>
+</p>
+
+<p>
+  O diretório do projeto deve conter esses arquivos:
+
+  <ul>
+    <li>
+      <b>*.csproj</b>:
+      Arquivo de configuração do projeto.
+    </li>
+    <li>
+      <b>appsettings.json</b>:
+      Arquivo de configuração para os <i>packages</i> (bibliotecas ou frameworks) adicionados ao projeto.
+    </li>
+    <li>
+      <b>appsettings.Development.json</b>:
+      Sobrescreve o arquivo <code>appsettings.json</code> quando o projeto é executado em ambiente de desenvolvimento.
+    </li>
+    <li>
+      <b>Startup.cs</b>:
+      Classe usada para definir quais e como os serviços dos <i>packages</i> adicionados ao projeto serão utilizados.
+    </li>
+    <li>
+      <b>Program.cs</b>:
+      Classe usada pela ferramenta <code>dotnet</code> para iniciar o projeto.
+    </li>
+  </ul>
+</p>
+
+<p>
+  Eu irei apresentar esses arquivos, mas nos aprofundaremos naturalmente ao longo do treinamento.
+  Você pode ter notado as pastas <code>bin</code> e <code>obj</code>.
+  Essas pastas são o local onde os binários vão depois de compilar o código-fonte do projeto.
+</p>
+
+<h2 id="csproj">
+  *.csproj
+  <a href="#csproj"></a>
+</h2>
+
+<p>
+  A configuração do projeto é mantida neste arquivo de formato <a href="https://www.w3.org/XML/">XML</a>.
+  Através desse arquivo nós podemos adicionar ou remover <a href="https://www.nuget.org">NuGet</a> <i>packages</i>,
+  incluir ou excluir arquivos para publicação, definir a versão do .NET Core, alterar o <i>namespace</i> padrão das
+  classes, e assim por diante.
+</p>
+
+<p>
+  Vamos alterar o <i>namespace</i> no elemento <code>RootNamespace</code> para seguir a
+  <a href="https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-namespaces">convenção de nomenclatura</a>
+  para <i>namespaces</i> (<code>UpperCamelCase</code>). Seguir a convenção de nomenclaturas melhora a leitura do
+  código-fonte por outras pessoas da equipe, facilitando identificar o que representam certas partes do código
+  (atributos, propriedades, constantes, etc), entre outros benefícios.
+</p>
+
+<p>
+  Depois de fazer isso seu arquivo <code>products-api.csproj</code> deverá estar parecido com este:
+</p>
+
+<p>
+  <pre><core>{{ include 'blog/posts/2019/09/03/products-api.csproj' }}</core></pre>
+</p>
+
+<h2 id="appsettings">
+  appsettings.json
+  <a href="#appsettings"></a>
+</h2>
+
+<p>
+  Neste arquivo de formato <a href="https://www.json.org">JSON</a>, manteremos a configuração dos <i>packages</i>
+  quando necessário. Você pode ter um arquivo que contenha as configurações comuns a todos os ambientes e criar
+  um arquivo específico para cada ambiente: desenvolvimento, homologação, produção.
+</p>
+
+<p>
+  Seu arquivo <code>appsettings.json</code> deve estar parecido com este:
+</p>
+
+<p>
+  <pre><core>{{ include 'blog/posts/2019/09/03/appsettings.json' }}</core></pre>
+</p>
+
+<h2 id="program">
+  Program.cs
+  <a href="#program"></a>
+</h2>
+
+<p>
+  Nosso projeto é na verdade um projeto console. Ele será inicializado pelo .NET Core invocando o método estático
+  <code>Main()</code>.
+</p>
+
+<p>
+  Removeremos as diretivas <code>using</code> desnecessárias e atualizaremos o <i>namespace</i>. Remover as diretivas
+  desnecessárias é mais um passo para manter o nosso código limpo. Seu <code>Program.cs</code> deve estar algo
+  parecido com este:
+</p>
+
+<p>
+  <pre><core>{{ include 'blog/posts/2019/09/03/Program.cs' }}</core></pre>
+</p>
+
+<h2 id="startup">
+  Startup.cs
+  <a href="#startup"></a>
+</h2>
+
+<p>
+  Nós usaremos esta classe para configurar os serviços e dependências que serão utilizados por outras classes no
+  projeto através do padrão de projeto injeção de dependência (DI - <i>Dependency Injection</i>).
+  Você verá esses dois métodos que basicamente significam:
+
+  <ul>
+    <li>
+      <b>ConfigureServices</b>:
+      Adicionar serviços para o container IoC. A configuração do serviço pode ser lida do arquivo
+      <code>appsettings.json</code>.
+    </li>
+    <li>
+      <b>Configure</b>:
+      Usar um ou mais serviços configurados como um <i>middleware</i> no <i>pipeline</i> da requisição
+      para processar a resposta.
+    </li>
+  </ul>
+</p>
+
+<p>
+  Você pode ler a documentação da Microsoft para saber mais detalhes sobre a
+  <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/startup/">classe Startup</a>,
+  <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection/">injeção de dependência</a> e
+  <a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware/"><i>middlewares</i></a>.
+</p>
+
+<p>
+  Nós removeremos as diretivas <code>using</code> desnecessárias e atualizaremos o <i>namespace</i>.
+  Seu arquivo <code>Startup.cs</code> deve estar parecido com este:
+</p>
+
+<p>
+  <pre><core>{{ include 'blog/posts/2019/09/03/Startup.cs' }}</core></pre>
+</p>
+
+<p>
+  Execute o projeto pressionando F5 no VS Code.
+  Agora, abra o seu navegador e acesse <code>http://localhost:5000</code> (porta padrão das aplicações ASP.NET Core).
+  Você deverá ver o texto <code>Hello World!</code>.
+</p>
+
+<p>
+  Também é possível executar o projeto diretamente da CLI, mas dessa forma nós não conseguiremos depurar com o VS Code.
+  A partir do diretório raíz do projeto  (onde está o arquivo <code>csproj</code>) execute o seguinte comando:
+</p>
+
+<p>
+  <pre><code>dotnet run</code></pre>
+</p>
+
+<p>
+  No próximo post nós começaremos a falar sobre RESTful API, padrão MVC e criaremos nosso primeiro <i>endpoint</i>
+  que responderá no formato JSON.
+</p>
+
+{{/inline}}
+
+{{/blog/page}}
