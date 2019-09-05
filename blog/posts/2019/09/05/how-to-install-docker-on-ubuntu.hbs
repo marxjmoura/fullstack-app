@@ -1,0 +1,173 @@
+{{#> blog/page
+  lang="en"
+  title="How to install Docker on Ubuntu"
+  description="Docker container images allow us to optimize the process of creating, deploying, and running applications. Let's start by installing Docker to get these benefits and learn more about how it works."
+  image="posts/2019/09/05/cover.png"
+  path="posts/2019/09/05/how-to-install-docker-on-ubuntu.html"
+  translation="br/posts/2019/09/05/como-instalar-o-docker-no-ubuntu.html"
+  disqus="2019/09/05/how-to-install-docker-on-ubuntu"
+}}
+
+{{#*inline "body-block"}}
+<small>
+  05 September 2019
+</small>
+
+<h1>
+  How to install Docker on Ubuntu
+</h1>
+
+<figure>
+  <img src="/posts/2019/09/05/cover.svg" alt="Docker">
+</figure>
+
+<p>
+  Docker container images allow us to optimize the process of creating, deploying, and running applications.
+  Let's start by installing Docker to get these benefits and learn more about how it works.
+</p>
+
+<p>
+  <a href="https://www.docker.com/">Docker</a> is an <a href="https://github.com/docker">open-source</a> and
+  <a href="https://docs.docker.com/get-started/">well documented</a> platform that allow us to run images inside
+  isolated containers. These images can be entire applications that can be shared as packages through
+  <a href="https://hub.docker.com/">Docker Hub</a> and published across multiple environments using specific settings.
+</p>
+
+<p>
+  Docker works based on <a href="https://linuxcontainers.org">Linux Containers</a> (LXC) that
+  allow us to run multiple isolated Linux systems (containers) using a single host and a single kernel, unlike a VM
+  (Virtual Machine).
+</p>
+
+<p>
+  Each container acts like a virtual machine but, without the hardware simulation overhead (performed by virtualizer or
+  emulator). By default, the containers use the host resources (CPU, RAM, etc) without restriction.
+  However, Docker allow us to limit the container by setting
+  <a href="https://docs.docker.com/config/containers/resource_constraints/">resource constraints</a>.
+</p>
+
+<p>
+  To start getting these benefits, let's install it by following these two steps that you can also find in the
+  <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/">Docker documentation</a>:
+
+  <ol>
+    <li>Uninstall any old versions of Docker</li>
+    <li>Install Docker</li>
+  </ol>
+</p>
+
+<h2 id="uninstall-docker">
+  Uninstall any old versions of Docker
+  <a href="#uninstall-docker"></a>
+</h2>
+
+<p>
+  It's <a href="https://docs.docker.com/install/linux/docker-ce/ubuntu/#uninstall-old-versions">recommended</a>
+  to uninstall older versions of Docker before proceeding:
+</p>
+
+<p>
+  <pre><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></pre>
+</p>
+
+<h2 id="install-docker">
+  Install Docker
+  <a href="#install-docker"></a>
+</h2>
+
+<p>
+  To install Docker CE (Community Edition) for the first time on Ubuntu we need to register the Docker repository.
+</p>
+
+<p>
+  Before install, let's update the <code>apt</code> indexes:
+</p>
+
+<p>
+  <pre><code>sudo apt-get update</code></pre>
+</p>
+
+<p>
+  Next, let's install the packages needed for atp to use repositories over HTTPS:
+</p>
+
+<p>
+  <pre><code>sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common</code></pre>
+</p>
+
+<p>
+  Now, let's add the official Docker GPG key:
+</p>
+
+<p>
+  <pre><code>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</code></pre>
+</p>
+
+<p>
+  Then, add the stable release repository of Docker:
+</p>
+
+<p>
+  <pre><code>sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"</code></pre>
+</p>
+
+<p>
+  Update <code>apt</code> indexes one more time:
+</p>
+
+<p>
+  <pre><code>sudo apt-get update</code></pre>
+</p>
+
+<p>
+  Finally, install Docker by running the following command:
+</p>
+
+<p>
+  <pre><code>sudo apt-get install docker-ce docker-ce-cli containerd.io</code></pre>
+</p>
+
+<p>
+  You may have notice that we installed three packages, let's briefly understand each one:
+
+  <ul>
+    <li>
+      <b>docker-ce</b>:
+      <a href="https://docs.docker.com/engine/">Docker Engine</a> with features available for Community Edition (free).
+      There is also an <a href="https://www.docker.com/products/docker-enterprise">Enterprise Edition</a> (paid).
+    </li>
+    <li>
+      <b>docker-ce-cli</b>:
+      This Docker Client provides a <a href="https://docs.docker.com/engine/reference/commandline/cli/">CLI</a>
+      (Command-Line Interface) to interact with the Docker Engine Community Edition.
+    </li>
+    <li>
+      <b>containerd.io</b>:
+      Container Daemon provides a runtime environment that abstracts the specifics of the kernels for the Docker Engine.
+      For more details you can read this <a href="https://blog.docker.com/2017/08/what-is-containerd-runtime/">post</a>
+      in the Docker's blog.
+    </li>
+  </ul>
+</p>
+
+<p>
+  To confirm that Docker has been successfully installed:
+</p>
+
+<p>
+  <pre><code>sudo docker run hello-world</code></pre>
+</p>
+
+<p>
+  This command downloads a test image and runs it in a container that prints a message and exits.
+  The displayed message should start with "Hello from Docker!".
+</p>
+
+<p>
+  Once installed and running correctly we can manage the Docker images.
+  But this we will discuss in an upcoming post.
+</p>
+
+{{/inline}}
+
+{{/blog/page}}
