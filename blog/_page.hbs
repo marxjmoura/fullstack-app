@@ -12,9 +12,16 @@
   <meta property="og:url" content="https://fullstack.app/{{path}}" />
   <title>{{title}}</title>
   {{#> head-block}}{{/head-block}}
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="icon" href="/favicon.ico">
+  {{#unless i18n-disabled}}
+  {{#if original}}
+  <link rel="alternate" href="https://fullstack.app/{{original}}" hreflang="en" >
+  {{else}}
+  <link rel="alternate" href="https://fullstack.app/{{translation}}" hreflang="br" >
+  {{/if}}
+  {{/unless}}
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous">
   <link rel="stylesheet" href="/blog.min.css?v=1.2.0">
 </head>
 <body>
