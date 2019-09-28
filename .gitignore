@@ -2,6 +2,9 @@
 # Directories #
 ###############
 .vscode/
+bin/
+obj/
+temp/
 node_modules/
 dist/
 gh-pages/
