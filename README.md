@@ -1,5 +1,4 @@
 # Marx J. Moura - Blog
+# Marx J. Moura - Blog
 
-My [blog](https://marxjmoura.com) about software development.
-
-Here I write about microservices architecture and web application development.
+My [blog](https://marxjmoura.com) about microservices architecture and software development.
