@@ -33,12 +33,4 @@
       </g>
     </g>
   </symbol>
-  <symbol id="storefront-community" viewBox="0 0 256 256">
-    <rect width="256" height="256" ry="97.724" fill="#fff" fill-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision"/>
-    <g transform="matrix(.942696 0 0 .942696 -7.488095 29.627772)" fill="none" stroke-width="15.875">
-      <rect ry="21" y="16.819" x="56.19" height="73.067" width="73.067" stroke="#2ecc71"/>
-      <rect ry="21" y="16.819" x="158.19" height="73.067" width="73.067" stroke="#f39c12"/>
-      <rect ry="21" y="118.819" x="56.19" height="73.067" width="73.067" stroke="#fc1460"/>
-    </g>
-  </symbol>
 </svg>
