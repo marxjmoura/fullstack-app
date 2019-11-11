@@ -8,9 +8,15 @@
     }
   }
 
-  .techs svg {
-    margin: 1rem 0;
-    height: 22px;
-    width: 32px
+  .techs {
+    a {
+      text-decoration: none;
+    }
+
+    svg {
+      margin: 1rem 0;
+      height: 22px;
+      width: 32px
+    }
   }
 }
