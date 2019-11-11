@@ -1,10 +1,5 @@
-# Full-Stack Applications - Blog
+# Marx J. Moura - Blog
 
-This is my [blog](https://fullstack.app).
+My [blog](https://marxjmoura.com) about software development.
+
 Here I write about microservices architecture and web application development.
-
-## License
-
-[MIT](https://github.com/marxjmoura/fullstack-app/blob/master/LICENSE)
-
-Copyright (c) 2019-present, Marx J. Moura
