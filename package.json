@@ -10,23 +10,23 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",
-    "popper.js": "^1.15.0"
+    "popper.js": "^1.16.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
-    "glob": "^7.1.4",
+    "glob": "^7.1.6",
     "gulp": "^4.0.2",
-    "gulp-autoprefixer": "^6.1.0",
-    "gulp-bro": "^1.0.3",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-bro": "^2.0.0",
     "gulp-connect": "^5.7.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
     "gulp-uglify": "^3.0.2",
-    "handlebars": "^4.1.2",
-    "jsdom": "^15.1.1"
+    "handlebars": "^4.5.1",
+    "jsdom": "^15.2.1"
   }
 }
