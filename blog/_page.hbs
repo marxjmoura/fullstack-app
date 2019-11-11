@@ -7,17 +7,17 @@
   <meta name="author" content="Marx J. Moura">
   <meta name="description" content="{{description}}" />
   <meta property="og:title" content="{{title}}"/>
-  <meta property="og:image" content="https://fullstack.app/{{image}}"/>
+  <meta property="og:image" content="https://marxjmoura.com/{{image}}"/>
   <meta property="og:description" content="{{description}}"/>
-  <meta property="og:url" content="https://fullstack.app/{{path}}" />
+  <meta property="og:url" content="https://marxjmoura.com/{{path}}" />
   <title>{{title}}</title>
   {{#> head-block}}{{/head-block}}
   <link rel="icon" href="/favicon.ico">
   {{#unless i18n-disabled}}
   {{#if original}}
-  <link rel="alternate" href="https://fullstack.app/{{original}}" hreflang="en" >
+  <link rel="alternate" href="https://marxjmoura.com/{{original}}" hreflang="en" >
   {{else}}
-  <link rel="alternate" href="https://fullstack.app/{{translation}}" hreflang="br" >
+  <link rel="alternate" href="https://marxjmoura.com/{{translation}}" hreflang="br" >
   {{/if}}
   {{/unless}}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous">
@@ -45,9 +45,9 @@
     <div class="header">
       <h1>
         {{#if original}}
-        <a href="/br">Full-Stack Applications</a>
+        <a href="/br">Marx J. Moura</a>
         {{else}}
-        <a href="/">Full-Stack Applications</a>
+        <a href="/">Marx J. Moura</a>
         {{/if}}
       </h1>
       <div class="techs">
@@ -65,7 +65,7 @@
     </div>
 
     <form method="get" action="https://www.google.com/search" class="google-search">
-      <input type="hidden" name="sitesearch" value="fullstack.app">
+      <input type="hidden" name="sitesearch" value="marxjmoura.com">
       <input type="text" name="q" class="form-control form-control-sm" placeholder="Google">
     </form>
 
@@ -102,7 +102,7 @@
   {{#if disqus}}
   <script>
     var disqus_config = function () {
-      this.page.url = 'https://fullstack.app/{{path}}';
+      this.page.url = 'https://marxjmoura.com/{{path}}';
       this.page.identifier = '{{disqus}}';
     };
     (function() {
