@@ -7,7 +7,7 @@ const htmlmin = require('gulp-htmlmin')
 const rename = require("gulp-rename")
 const sass = require('gulp-sass')
 const uglify = require('gulp-uglify')
-const handlebars = require('./blog-engine/handlebars')
+const handlebars = require('./handlebars')
 
 gulp.task('build-sass', () => {
   return gulp.src('blog/scss/blog.scss')
@@ -26,7 +26,7 @@ gulp.task('build-js', () => {
 })
 
 gulp.task('build-html', () => {
-  return gulp.src('blog/**/*.hbs', { base: './blog' })
+  return gulp.src(['blog/**/_*.hbs', 'blog/**/*.hbs'], { base: './blog' })
     .pipe(handlebars())
     .pipe(rename({ extname: '.html' }))
     .pipe(htmlmin({ collapseWhitespace: true })
