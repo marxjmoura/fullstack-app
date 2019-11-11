@@ -1,0 +1,93 @@
+{{#> blog/page
+  lang="br"
+  title="Como executar o RabbitMQ com Docker"
+  description=""
+  image="posts/2019/10/01/cover.png"
+  path="br/posts/2019/10/01/como-executar-o-rabbitmq-com-docker.html"
+  original="posts/2019/10/01/how-to-run-rabbitmq-with-docker.html"
+  disqus="2019/10/01/how-to-run-rabbitmq-with-docker"
+}}
+
+{{#*inline "body-block"}}
+<small>
+  01 de outubro de 2019
+</small>
+
+<h1>
+  Como executar o RabbitMQ com Docker
+</h1>
+
+<figure>
+  <img src="/posts/2019/10/01/cover.svg" alt="RabbitMQ via Docker">
+</figure>
+
+<p>
+  <a href="https://www.rabbitmq.com">RabbitMQ</a> é um servidor de mensageria de
+  <a href="https://github.com/rabbitmq">código aberto</a> que possibilita a comunicação entre os microserviços
+  através de eventos. Vamos executá-lo de maneira bem simples usando uma imagem do Docker.
+</p>
+
+<p>
+  Caso você ainda não tenha o Docker instalado, te convido a ler o post sobre
+  <a href="/br/posts/2019/09/05/como-instalar-o-docker-no-ubuntu.html">como instalar o Docker no Ubuntu</a>
+  e saber como ele funciona.
+</p>
+
+<p>
+  Para utilizar o RabbitMQ no Docker primeiro vamos executar o comando <code>pull</code>
+  para baixar a imagem que contém o painel de gerenciamento que podemos acessar pelo browser.
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/10/01/docker-pull-rabbitmq.sh' }}</code></pre>
+</p>
+
+<p>
+  Agora que temos a imagem do RabbitMQ vamos iniciar um container.
+</p>
+
+<p>
+  <pre><code>{{ include 'blog/posts/2019/10/01/run-rabbitmq-container.sh' }}</code></pre>
+</p>
+
+<p>
+  Vamos entender um pouco as flags que utilizamos no comando <code>run</code>:
+  <ul>
+    <li>
+      <code>-d</code>:
+      Inicia o container em <a href="https://docs.docker.com/engine/reference/run/#detached--d">detached mode</a>.
+    </li>
+    <li>
+      <code>--hostname</code>:
+      A flag
+      <a href="https://docs.docker.com/v17.09/engine/userguide/networking/default_network/configure-dns/">
+        hostname
+      </a>
+      define o nome que o <code>/bin/bash</code> dentro do container irá exibir.
+    </li>
+    <li>
+      <code>--name</code>:
+      A flag
+      <a href="https://docs.docker.com/engine/reference/run/#name---name">name</a>
+      nos permite definir um nome para identificar facilmente um container.
+    </li>
+    <li>
+      <code>--restart always</code>:
+      A flag <a href="https://docs.docker.com/config/containers/start-containers-automatically/">restart</a>
+      com valor <code>always</code> indica que o container deve ser iniciado sempre que for parado.
+    </li>
+    <li>
+      <code>-p host:container</code>:
+      Configura o roteamento da porta do host para a porta do container.
+    </li>
+  </ul>
+</p>
+
+<p>
+  Após executar o container, você deve conseguir acessar o painel de gerenciamento do RabbitMQ em
+  <code>http://localhost:15672</code>. O login padrão é <code>guest</code> e a senha <code>guest</code>.
+</p>
+
+{{/inline}}
+
+{{/blog/page}}
