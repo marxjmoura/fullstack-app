@@ -1,8 +1,8 @@
 .author {
   display: flex;
   align-items: center;
-  padding: 4rem 0;
   text-align: center;
+  padding: 4rem 0;
 
   a {
     text-decoration: none;
@@ -22,29 +22,16 @@
     margin: 0;
   }
 
-  &.author-sm {
-    img {
-      margin-right: 1rem;
-      height: 4rem;
-      width: 4rem;
-    }
-  }
-
   @media (max-width: map-get($grid-breakpoints, "sm")) {
     display: block;
+
+    p {
+      text-align: center;
+    }
 
     img {
       margin-bottom: 2rem;
       margin-right: 0;
-    }
-
-    &.author-sm {
-      display: flex;
-
-      img {
-        margin-bottom: 0;
-        margin-right: 1rem;
-      }
     }
   }
 }

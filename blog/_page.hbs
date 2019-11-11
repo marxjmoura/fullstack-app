@@ -20,8 +20,7 @@
   <link rel="alternate" href="https://marxjmoura.com/{{translation}}" hreflang="br" >
   {{/if}}
   {{/unless}}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous">
-  <link rel="stylesheet" href="/blog.min.css?v=1.2.0">
+  <link rel="stylesheet" href="/blog.min.css?v=2.0.0">
 </head>
 <body>
   <div class="container">
@@ -52,34 +51,54 @@
       </h1>
       <div class="techs">
         <a href="https://dotnet.microsoft.com/" target="_blank">
-          <svg><use href="/img/techs.svg#netcore"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#netcore"/>
+          </svg>
         </a>
         <a href="https://vuejs.org/" target="_blank">
-          <svg><use href="/img/techs.svg#vue"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#vue"/>
+          </svg>
         </a>
         <a href="https://www.postgresql.org/" target="_blank">
-          <svg><use href="/img/techs.svg#postgresql"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#postgresql"/>
+          </svg>
         </a>
         <a href="https://www.rabbitmq.com/" target="_blank">
-          <svg><use href="/img/techs.svg#rabbitmq"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#rabbitmq"/>
+          </svg>
         </a>
         <a href="https://github.com/" target="_blank">
-          <svg><use href="/img/techs.svg#github"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#github"/>
+          </svg>
         </a>
         <a href="https://aws.amazon.com/" target="_blank">
-          <svg><use href="/img/techs.svg#aws"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#aws"/>
+          </svg>
         </a>
         <a href="https://www.nginx.com/" target="_blank">
-          <svg><use href="/img/techs.svg#nginx"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#nginx"/>
+          </svg>
         </a>
         <a href="https://ubuntu.com/" target="_blank">
-          <svg><use href="/img/techs.svg#ubuntu"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#ubuntu"/>
+          </svg>
         </a>
         <a href="https://www.docker.com/" target="_blank">
-          <svg><use href="/img/techs.svg#docker"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#docker"/>
+          </svg>
         </a>
         <a href="https://circleci.com/" target="_blank">
-          <svg><use href="/img/techs.svg#circleci"/></svg>
+          <svg class="icon">
+            <use href="/img/icons.svg#circleci"/>
+          </svg>
         </a>
       </div>
     </div>
@@ -104,11 +123,15 @@
           {{/if}}
         </p>
         <p>
-          <a href="https://github.com/marxjmoura/" class="p-1">
-            <i class="fab fa-lg fa-github"></i>
+          <a href="https://github.com/marxjmoura/">
+            <svg class="icon">
+              <use href="/img/icons.svg#github"/>
+            </svg>
           </a>
-          <a href="https://www.linkedin.com/in/marxjmoura/" class="p-1">
-            <i class="fab fa-lg fa-linkedin"></i>
+          <a href="https://www.linkedin.com/in/marxjmoura/">
+            <svg class="icon">
+              <use href="/img/icons.svg#linkedin"/>
+            </svg>
           </a>
         </p>
       </div>
@@ -117,8 +140,7 @@
     <div id="disqus_thread"></div>
     {{/if}}
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/js/all.min.js" integrity="sha256-xzrHBImM2jn9oDLORlHS1/0ekn1VyypEkV1ALvUx8lU=" crossorigin="anonymous"></script>
-  <script src="/blog.min.js?v=1.2.0"></script>
+  <script src="/blog.min.js?v=2.0.0"></script>
   {{#if disqus}}
   <script>
     var disqus_config = function () {
